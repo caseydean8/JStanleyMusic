@@ -38,8 +38,9 @@ const updateBtn = document.getElementById("update");
 const deleteBtn = document.getElementById("delete-btn");
 
 // insert data function
+const dateStored = new Date();
 function insertData() {
-  set(ref(db, "event added"), {
+  set(ref(db, "event added " + dateStored.toString()), {
     date: date.value,
     link: link.value,
     info: info.value,
