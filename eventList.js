@@ -55,31 +55,45 @@ function insertData() {
 insert.addEventListener("click", insertData);
 
 //create  event list
-function eventList(id, date, link, value) {
+function eventList(id, date, link, info) {
   const item = document.createElement("div");
+  item.setAttribute("id", id);
+  item.setAttribute("class", "card")
   const itemDate = document.createElement("h4");
   const itemLink = document.createElement("a");
   const itemInfo = document.createElement("h5");
+  const deleteBtn = document.createElement("button");
+  deleteBtn.setAttribute("class", "btn btn-primary");
+  deleteBtn.setAttribute("data-id", id);
+  deleteBtn.innerHTML = "DELETE";
 
   itemDate.innerHTML = date;
-  itemLink.innerHTML = link;
+  itemLink.innerHTML = `facebook link ${link}`;
   itemInfo.innerHTML = info;
 
+  const eventList = document.getElementById("event-list");
+  eventList.append(item);
   item.appendChild(itemDate);
   item.appendChild(itemLink);
   item.appendChild(itemInfo);
+  item.appendChild(deleteBtn);
+
 }
 
 // get data
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
-    console.log(`snapshot`);
-    console.log(snapshot);
     let events = [];
     snapshot.forEach((childSnapshot) => {
-      events.push(childSnapshot.val());
-      console.log(events)
+      console.log(childSnapshot.key)
+      let eventId = childSnapshot.key;
+      let eventDate = childSnapshot.val().date;
+      let eventInfo = childSnapshot.val().info;
+      let eventLink = childSnapshot.val().link;
+      eventList(eventId, eventDate, eventInfo, eventLink)
+      // events.push(childSnapshot.val());
     });
+    // console.log(events);
   });
 }
 window.onload = getAllEvents;
