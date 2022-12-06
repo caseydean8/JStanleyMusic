@@ -37,7 +37,6 @@ const info = document.getElementById("info");
 const insert = document.getElementById("insert");
 const select = document.getElementById("select");
 const updateBtn = document.getElementById("update");
-const deleteBtn = document.getElementById("delete-btn");
 
 // insert data function
 function insertData() {
@@ -54,61 +53,66 @@ function insertData() {
 // insert button event
 insert.addEventListener("click", insertData);
 
+// multiple attributes helper function
+function multiAttributes(elem, attrs) {
+  for (const key in attrs) {
+    elem.setAttribute(key, attrs[key]);
+  }
+}
+
 //create  event list
 function eventList(id, date, link, info) {
   const item = document.createElement("div");
-  item.setAttribute("id", id);
-  item.setAttribute("class", "card")
+  multiAttributes(item, { id: id, class: "card" });
   const itemDate = document.createElement("h4");
-  const itemLink = document.createElement("a");
-  const itemInfo = document.createElement("h5");
-  const deleteBtn = document.createElement("button");
-  deleteBtn.setAttribute("class", "btn btn-primary");
-  deleteBtn.setAttribute("data-id", id);
-  deleteBtn.innerHTML = "DELETE";
-
   itemDate.innerHTML = date;
-  itemLink.innerHTML = `facebook link ${link}`;
+  const itemInfo = document.createElement("h5");
   itemInfo.innerHTML = info;
+  const itemLink = document.createElement("a");
+  itemLink.innerHTML = `facebook link ${link}`;
+  const deleteBtn = document.createElement("button");
+  multiAttributes(deleteBtn, { class: "btn btn-danger", "data-id": id });
+  deleteBtn.innerHTML = "DELETE";
+  deleteBtn.onclick = function () {
+    deleteEvent(id);
+  };
 
   const eventList = document.getElementById("event-list");
   eventList.append(item);
   item.appendChild(itemDate);
-  item.appendChild(itemLink);
   item.appendChild(itemInfo);
+  item.appendChild(itemLink);
   item.appendChild(deleteBtn);
-
 }
 
 // get data
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
-    let events = [];
     snapshot.forEach((childSnapshot) => {
-      console.log(childSnapshot.key)
-      let eventId = childSnapshot.key;
-      let eventDate = childSnapshot.val().date;
-      let eventInfo = childSnapshot.val().info;
-      let eventLink = childSnapshot.val().link;
-      eventList(eventId, eventDate, eventInfo, eventLink)
-      // events.push(childSnapshot.val());
+      const eventId = childSnapshot.key;
+      const eventDate = childSnapshot.val().date;
+      const eventInfo = childSnapshot.val().info;
+      const eventLink = childSnapshot.val().link;
+      eventList(eventId, eventDate, eventInfo, eventLink);
     });
-    // console.log(events);
   });
 }
 window.onload = getAllEvents;
-// select data
 
-function selectData() {
-  get(child(dbRef.id))
-    .then((snapshot) => {
-      if (snapshot.exist()) {
-        date.value = snapshot.val().date;
-        link.value = snapshot.val().link;
-        info.value = snapshot.val().info;
-      } else {
-        console.log("no data found");
-      }
-    })
+// update data
+function updateEvent(id) {
+  update(ref(db, `event/ ${id}`), {
+    date: date.value,
+    link: link.value,
+    info: info.value,
+  })
+    .then(() => console.log("data stored successfully"))
+    .catch((err) => console.log(err));
+}
+
+// delete data
+function deleteEvent(id) {
+  remove(ref(db, `event/${id}`))
+    .then(() => console.log("data deleted successfully"))
     .catch((err) => console.log(err));
 }
