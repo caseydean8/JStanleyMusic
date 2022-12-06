@@ -47,15 +47,18 @@
       </div>
     </div>
   </nav>
-  <div class="event-listing">
+  <div class="container">
     <label>Date</label> <input type="text" id="date"><br><br>
     <label>Link</label> <input type="text" id="link"><br><br>
     <label>Info</label> <input type="text" id="info"><br><br>
     <hr>
-    <button id="insert">insert</button>
-    <button id="select">select</button>
-    <button id="update">update</button>
-    <button id="delete-btn">delete</button>
+    <button class="btn btn-primary" id="insert">insert</button>
+    <button class="btn btn-primary" id="select">select</button>
+    <button class="btn btn-primary" id="update">update</button>
+    <button class="btn btn-primary" id="delete-btn">delete</button>
+    <div id="event-list-container">
+      <ul id="event-list"></ul>
+    </div>
   </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js"

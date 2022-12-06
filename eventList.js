@@ -1,10 +1,12 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-analytics.js";
+
 import {
   getDatabase,
   ref,
+  onChildAdded,
   set,
+  get,
   child,
   update,
   remove,
@@ -25,8 +27,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
 const db = getDatabase(app);
+const dbRef = ref(db);
 
 const date = document.getElementById("date");
 const link = document.getElementById("link");
@@ -38,9 +40,9 @@ const updateBtn = document.getElementById("update");
 const deleteBtn = document.getElementById("delete-btn");
 
 // insert data function
-const dateStored = new Date();
 function insertData() {
-  set(ref(db, "event added " + dateStored.toString()), {
+  const eventId = Date.now();
+  set(ref(db, `event/ ${eventId}`), {
     date: date.value,
     link: link.value,
     info: info.value,
@@ -51,3 +53,48 @@ function insertData() {
 
 // insert button event
 insert.addEventListener("click", insertData);
+
+//create  event list
+function eventList(id, date, link, value) {
+  const item = document.createElement("div");
+  const itemDate = document.createElement("h4");
+  const itemLink = document.createElement("a");
+  const itemInfo = document.createElement("h5");
+
+  itemDate.innerHTML = date;
+  itemLink.innerHTML = link;
+  itemInfo.innerHTML = info;
+
+  item.appendChild(itemDate);
+  item.appendChild(itemLink);
+  item.appendChild(itemInfo);
+}
+
+// get data
+function getAllEvents() {
+  get(child(dbRef, "event")).then((snapshot) => {
+    console.log(`snapshot`);
+    console.log(snapshot);
+    let events = [];
+    snapshot.forEach((childSnapshot) => {
+      events.push(childSnapshot.val());
+      console.log(events)
+    });
+  });
+}
+window.onload = getAllEvents;
+// select data
+
+function selectData() {
+  get(child(dbRef.id))
+    .then((snapshot) => {
+      if (snapshot.exist()) {
+        date.value = snapshot.val().date;
+        link.value = snapshot.val().link;
+        info.value = snapshot.val().info;
+      } else {
+        console.log("no data found");
+      }
+    })
+    .catch((err) => console.log(err));
+}
