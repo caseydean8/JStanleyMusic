@@ -4,7 +4,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebas
 import {
   getDatabase,
   ref,
-  onChildAdded,
   set,
   get,
   child,
@@ -46,7 +45,10 @@ function insertData() {
     link: link.value,
     info: info.value,
   })
-    .then(() => console.log("data stored successfully"))
+    .then(() => {
+      console.log("data stored successfully");
+      window.location.reload();
+    })
     .catch((err) => console.log(err));
 }
 
@@ -113,6 +115,9 @@ function updateEvent(id) {
 // delete data
 function deleteEvent(id) {
   remove(ref(db, `event/${id}`))
-    .then(() => console.log("data deleted successfully"))
+    .then(() => {
+      console.log("data deleted successfully");
+      window.location.reload();
+    })
     .catch((err) => console.log(err));
 }

@@ -48,14 +48,20 @@
     </div>
   </nav>
   <div class="container">
-    <label>Date</label> <input type="text" id="date"><br><br>
-    <label>Link</label> <input type="text" id="link"><br><br>
-    <label>Info</label> <input type="text" id="info"><br><br>
-    <hr>
-    <button class="btn btn-primary" id="insert">insert</button>
-    <button class="btn btn-primary" id="select">select</button>
-    <button class="btn btn-primary" id="update">update</button>
-    <button class="btn btn-primary" id="delete-btn">delete</button>
+    <div class="form-floating my-3">
+      <input id="date" type="text" class="form-control" placeholder="date">
+      <label for="floatingInput">Date</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input id="link" type="text" class="form-control" placeholder="info">
+      <label for="floatingPassword">info</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input id="info" type="link" class="form-control" placeholder="link">
+      <label for="floatingPassword">link</label>
+    </div>
+    <button class="btn btn-primary mb-3" id="insert">insert</button>
+    <button class="btn btn-primary mb-3" id="update">update</button>
     <div id="event-list"></div>
   </div>
 </body>
