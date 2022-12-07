@@ -47,7 +47,7 @@ function insertData() {
   })
     .then(() => {
       console.log("data stored successfully");
-      window.location.reload();
+      document.getElementById("form").reset();
     })
     .catch((err) => console.log(err));
 }
@@ -123,27 +123,20 @@ window.onload = getAllEvents;
 
 // fetch and review data to update
 function reviewUpdate(id) {
-  console.log(`clicked with id ${id}`);
   get(child(dbRef, `event/${id}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
         date.value = snapshot.val().date;
         info.value = snapshot.val().info;
         link.value = snapshot.val().link;
+        const updateWarn = document.createElement("p");
+        updateWarn.innerHTML = "update info at form on top of page.";
+        multiAttributes(updateWarn, { class: "ms-3 text-danger"})
+        document.getElementById(id).appendChild(updateWarn);
       } else {
         console.log("no data found");
-      }
+      } 
     })
-    .catch((err) => console.log(err));
-}
-// update data
-function updateEvent(id) {
-  update(ref(db, `event/${id}`), {
-    date: date.value,
-    link: link.value,
-    info: info.value,
-  })
-    .then(() => console.log("data stored successfully"))
     .catch((err) => console.log(err));
 }
 
@@ -152,7 +145,14 @@ function deleteEvent(id) {
   remove(ref(db, `event/${id}`))
     .then(() => {
       console.log("data deleted successfully");
+      document.getElementById("form").reset();
       window.location.reload();
     })
     .catch((err) => console.log(err));
 }
+
+// cancel update
+function cancelUpdate() {
+      document.getElementById("form").reset();
+}
+cancel.addEventListener("click", cancelUpdate);
