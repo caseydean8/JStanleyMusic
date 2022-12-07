@@ -64,23 +64,37 @@ function multiAttributes(elem, attrs) {
 
 //create  event list
 function eventList(id, date, link, info) {
+  // event card
   const item = document.createElement("div");
   multiAttributes(item, { id: id, class: "card mb-2" });
   const cardBody = document.createElement("div");
-  cardBody.setAttribute("class", "card-body")
+  cardBody.setAttribute("class", "card-body");
   const itemDate = document.createElement("h4");
-  itemDate.setAttribute("class", "card-title")
+  itemDate.setAttribute("class", "card-title");
   itemDate.innerHTML = date;
   const itemInfo = document.createElement("h5");
   itemInfo.innerHTML = info;
   const itemLink = document.createElement("a");
-  itemLink.setAttribute("href", link);
+  multiAttributes(itemLink, { class: "d-block", href: link });
   itemLink.innerHTML = `facebook link`;
+  // delete and update buttons
   const deleteBtn = document.createElement("button");
-  multiAttributes(deleteBtn, { class: "btn btn-outline-danger d-block mt-2", "data-id": id });
+  multiAttributes(deleteBtn, {
+    class: "btn btn-outline-danger d-inline-block mt-2 me-2",
+    "data-id": id,
+  });
   deleteBtn.innerHTML = "delete";
   deleteBtn.onclick = function () {
     deleteEvent(id);
+  };
+  const updateBtn = document.createElement("button");
+  multiAttributes(updateBtn, {
+    class: "btn btn-outline-primary d-inline-block mt-2",
+    "data-id": id,
+  });
+  updateBtn.innerHTML = "update";
+  updateBtn.onclick = function () {
+    reviewUpdate(id);
   };
 
   const eventList = document.getElementById("event-list");
@@ -90,6 +104,7 @@ function eventList(id, date, link, info) {
   cardBody.appendChild(itemInfo);
   cardBody.appendChild(itemLink);
   cardBody.appendChild(deleteBtn);
+  cardBody.appendChild(updateBtn);
 }
 
 // get data
@@ -106,9 +121,24 @@ function getAllEvents() {
 }
 window.onload = getAllEvents;
 
+// fetch and review data to update
+function reviewUpdate(id) {
+  console.log(`clicked with id ${id}`);
+  get(child(dbRef, `event/${id}`))
+    .then((snapshot) => {
+      if (snapshot.exists()) {
+        date.value = snapshot.val().date;
+        info.value = snapshot.val().info;
+        link.value = snapshot.val().link;
+      } else {
+        console.log("no data found");
+      }
+    })
+    .catch((err) => console.log(err));
+}
 // update data
 function updateEvent(id) {
-  update(ref(db, `event/ ${id}`), {
+  update(ref(db, `event/${id}`), {
     date: date.value,
     link: link.value,
     info: info.value,
