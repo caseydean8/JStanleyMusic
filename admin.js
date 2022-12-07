@@ -1,5 +1,5 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-app.js";
+import { initializeApp, firebaseConfig } from "./initFirebase.js";
 
 import {
   getDatabase,
@@ -7,22 +7,8 @@ import {
   set,
   get,
   child,
-  update,
   remove,
 } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyCdlQ3E4jj7X4nxK9nVEwsaZS4dHzZmTI0",
-  authDomain: "jstanleymusic-37bec.firebaseapp.com",
-  databaseURL: "https://jstanleymusic-37bec-default-rtdb.firebaseio.com",
-  projectId: "jstanleymusic-37bec",
-  storageBucket: "jstanleymusic-37bec.appspot.com",
-  messagingSenderId: "376619570226",
-  appId: "1:376619570226:web:f108a90173e8ff76b9982b",
-  measurementId: "G-CTK9YBJCE4",
-};
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -70,7 +56,7 @@ function eventList(id, date, link, info) {
   const cardBody = document.createElement("div");
   cardBody.setAttribute("class", "card-body");
   const itemDate = document.createElement("h4");
-  itemDate.setAttribute("class", "card-title");
+  itemDate.setAttribute("class", "card-title text-primary");
   itemDate.innerHTML = date;
   const itemInfo = document.createElement("h5");
   itemInfo.innerHTML = info;
