@@ -65,26 +65,31 @@ function multiAttributes(elem, attrs) {
 //create  event list
 function eventList(id, date, link, info) {
   const item = document.createElement("div");
-  multiAttributes(item, { id: id, class: "card" });
+  multiAttributes(item, { id: id, class: "card mb-2" });
+  const cardBody = document.createElement("div");
+  cardBody.setAttribute("class", "card-body")
   const itemDate = document.createElement("h4");
+  itemDate.setAttribute("class", "card-title")
   itemDate.innerHTML = date;
   const itemInfo = document.createElement("h5");
   itemInfo.innerHTML = info;
   const itemLink = document.createElement("a");
-  itemLink.innerHTML = `facebook link ${link}`;
+  itemLink.setAttribute("href", link);
+  itemLink.innerHTML = `facebook link`;
   const deleteBtn = document.createElement("button");
-  multiAttributes(deleteBtn, { class: "btn btn-danger", "data-id": id });
-  deleteBtn.innerHTML = "DELETE";
+  multiAttributes(deleteBtn, { class: "btn btn-outline-danger d-block mt-2", "data-id": id });
+  deleteBtn.innerHTML = "delete";
   deleteBtn.onclick = function () {
     deleteEvent(id);
   };
 
   const eventList = document.getElementById("event-list");
   eventList.append(item);
-  item.appendChild(itemDate);
-  item.appendChild(itemInfo);
-  item.appendChild(itemLink);
-  item.appendChild(deleteBtn);
+  item.appendChild(cardBody);
+  cardBody.appendChild(itemDate);
+  cardBody.appendChild(itemInfo);
+  cardBody.appendChild(itemLink);
+  cardBody.appendChild(deleteBtn);
 }
 
 // get data
