@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="/style.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
@@ -17,9 +17,9 @@
 <body>
   <nav class="navbar navbar-expand-md navbar-dark bg-primary">
     <div class="container">
-      <div class="">
+      <div>
         <span class>
-          <img src="img/asset 21-ts1555661705.svg" alt="" width="90" height="72" class="d-inline-block">
+          <img src="assets/img/asset 21-ts1555661705.svg" alt="" width="90" height="72" class="d-inline-block">
         </span>
         <h3 class="d-inline" style="color: rgba(255,255,28,1);">John
           Stanley</h3>
@@ -35,10 +35,10 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarnav">
         <ul class="navbar-nav align-items-center">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/" style="color: rgba(255,255,28,1);">home</a>
+            <a class="nav-link" aria-current="page" href="/">home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/events.html">upcoming events</a>
+            <a class="nav-link active" href="/events.html" style="color: rgba(255,255,28,1);">upcoming events</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/admin.html">contact us</a>
@@ -48,12 +48,13 @@
     </div>
   </nav>
   <div class="container">
+    <video poster="gallery/JST_0101_2-ts1657986128.jpg" controls=""><source type="video/mp4" src="gallery/VID_20220929_002603_610.mp4-ts1666038176.mov"><a href="gallery/VID_20220929_002603_610.mp4-ts1666038176.mov" data-popup-processed="true">VID_20220929_002603_610.mp4-ts1666038176.mov</a></video>
     <div id="event-list" class="pb-5 mt-3"></div>
   </div>
 </body>
 <script src="https://code.jquery.com/jquery-3.6.1.slim.min.js"
   integrity="sha256-w8CvhFs7iHNVUtnSP0YKEg00p9Ih13rlL9zGqvLdePA=" crossorigin="anonymous"></script>
-<script src="/initFirebase.js" type="module"></script>
-<script src="/events.js" type="module"></script>
+<script src="assets/modules/initFirebase.js" type="module"></script>
+<script src="assets/modules/events.js" type="module"></script>
 
 </html>

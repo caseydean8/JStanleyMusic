@@ -1,4 +1,3 @@
-
 import { initializeApp, firebaseConfig } from "./initFirebase.js";
 
 import {
@@ -12,7 +11,6 @@ import {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db);
-
 
 // multiple attributes helper function
 function multiAttributes(elem, attrs) {
@@ -32,12 +30,12 @@ function eventList(id, date, link, info) {
   itemDate.setAttribute("class", "card-title text-primary");
   itemDate.innerHTML = date;
   const itemInfo = document.createElement("h5");
-  itemInfo.setAttribute("class", "lead")
+  itemInfo.setAttribute("class", "lead");
   itemInfo.innerHTML = info;
   const itemLink = document.createElement("a");
   multiAttributes(itemLink, { class: "d-block", href: link });
   itemLink.innerHTML = `facebook link`;
-  
+
   const eventList = document.getElementById("event-list");
   eventList.append(item);
   item.appendChild(cardBody);
@@ -50,7 +48,6 @@ function eventList(id, date, link, info) {
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
-      console.log(childSnapshot)
       const eventId = childSnapshot.key;
       const eventDate = childSnapshot.val().date;
       const eventInfo = childSnapshot.val().info;
