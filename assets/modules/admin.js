@@ -117,13 +117,71 @@ function reviewUpdate(id) {
         link.value = snapshot.val().link;
         const updateWarn = document.createElement("p");
         updateWarn.innerHTML = "update info at form on top of page.";
-        multiAttributes(updateWarn, { class: "ms-3 text-danger"})
+        multiAttributes(updateWarn, { class: "ms-3 text-danger" });
         document.getElementById(id).appendChild(updateWarn);
+        updateForm(id);
       } else {
         console.log("no data found");
-      } 
+      }
     })
     .catch((err) => console.log(err));
+}
+
+// update form
+function updateForm(id) {
+  const dateInput = document.createElement("input");
+  multiAttributes(dateInput, {
+    id: "upDate",
+    class: "form-control mb-3",
+    type: "text",
+    placeholder: "date",
+  });
+  const dateLabel = document.createElement("label");
+  dateLabel.setAttribute("for", "floatingInput");
+  dateLabel.innerHTML = "date";
+
+  const infoInput = document.createElement("textarea");
+  multiAttributes(infoInput, {
+    id: "upInfo",
+    class: "form-control mb-3",
+    type: "text",
+    placeholder: "info",
+  });
+  const infoLabel = document.createElement("label");
+  dateLabel.setAttribute("for", "floatingInput");
+  infoLabel.innerHTML = "info";
+
+  const linkInput = document.createElement("input");
+  multiAttributes(linkInput, {
+    id: "uplink",
+    class: "form-control mb-3",
+    type: "link",
+    placeholder: "link",
+  });
+  const linkLabel = document.createElement("label");
+  linkLabel.setAttribute("for", "floatingInput");
+  linkLabel.innerHTML = "link";
+
+  const updateDbBtn = document.createElement("button");
+  multiAttributes(updateDbBtn, {
+    class: "btn btn-outline-primary mt-2",
+    "data-id": id,
+  });
+  updateDbBtn.innerHTML = "update";
+
+  const inputs = [dateInput, infoInput, linkInput];
+  const labels = [dateLabel, infoLabel, linkLabel];
+
+  const updateForm = document.getElementById(id);
+
+  for (let i = 0; i < inputs.length; i++) {
+    const floatingForm = document.createElement("form");
+    floatingForm.setAttribute("class", "form-floating mx-3");
+    floatingForm.setAttribute("id", inputs[i]);
+    updateForm.appendChild(floatingForm);
+    floatingForm.appendChild(inputs[i])
+    floatingForm.appendChild(labels[i])
+  }
 }
 
 // delete data
@@ -139,6 +197,6 @@ function deleteEvent(id) {
 
 // cancel update
 function cancelUpdate() {
-      document.getElementById("form").reset();
+  document.getElementById("form").reset();
 }
 cancel.addEventListener("click", cancelUpdate);
