@@ -8,6 +8,7 @@ import {
   get,
   child,
   remove,
+  update,
 } from "https://www.gstatic.com/firebasejs/9.14.0/firebase-database.js";
 
 // Initialize Firebase
@@ -19,9 +20,6 @@ let date;
 let link;
 let info;
 
-const insert = document.getElementById("insert");
-// const select = document.getElementById("select");
-const updateBtn = document.getElementById("update");
 const formContainer = document.getElementById("form-container");
 
 // Add event form //////////////////////////
@@ -52,11 +50,6 @@ function insertData() {
     })
     .catch((err) => console.log(err));
 }
-
-// insert button event
-// insert.addEventListener("click", insertData);
-
-// multiple attributes helper function
 function multiAttributes(elem, attrs) {
   for (const key in attrs) {
     elem.setAttribute(key, attrs[key]);
@@ -64,7 +57,7 @@ function multiAttributes(elem, attrs) {
 }
 
 //create  event list
-function eventList(id, date, link, info) {
+function eventList(id, date, info, link) {
   // event card
   const item = document.createElement("div");
   multiAttributes(item, { id: id, class: "card mb-2" });
@@ -88,6 +81,8 @@ function eventList(id, date, link, info) {
   deleteBtn.onclick = function () {
     deleteEvent(id);
   };
+
+  // UPDATE BUTTON
   const updateBtn = document.createElement("button");
   multiAttributes(updateBtn, {
     class: "btn btn-outline-primary d-inline-block mt-2",
@@ -95,7 +90,9 @@ function eventList(id, date, link, info) {
   });
   updateBtn.innerHTML = "update";
   updateBtn.onclick = function () {
+    formContainer.remove();
     updateForm(id);
+    reviewUpdate(id);
   };
 
   const eventList = document.getElementById("event-list");
@@ -111,15 +108,14 @@ function eventList(id, date, link, info) {
 // get data
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
-    snapshot
-      .forEach((childSnapshot) => {
-        const eventId = childSnapshot.key;
-        const eventDate = childSnapshot.val().date;
-        const eventInfo = childSnapshot.val().info;
-        const eventLink = childSnapshot.val().link;
-        eventList(eventId, eventDate, eventInfo, eventLink);
-      })
-      // .catch((err) => console.error(err));
+    snapshot.forEach((childSnapshot) => {
+      const eventId = childSnapshot.key;
+      const eventDate = childSnapshot.val().date;
+      const eventInfo = childSnapshot.val().info;
+      const eventLink = childSnapshot.val().link;
+      eventList(eventId, eventDate, eventInfo, eventLink);
+    });
+    // .catch((err) => console.error(err));
   });
 }
 window.onload = getAllEvents;
@@ -131,15 +127,22 @@ function reviewUpdate(id) {
   get(child(dbRef, `event/${id}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val())
+        console.log(snapshot.val().date);
+        date = document.getElementById("date");
+        info = document.getElementById("info");
+        link = document.getElementById("link");
         date.value = snapshot.val().date;
         info.value = snapshot.val().info;
         link.value = snapshot.val().link;
         const updateWarn = document.createElement("p");
         multiAttributes(updateWarn, { class: "ms-3 text-danger" });
-        updateWarn.innerHTML = "update information below.";
+        updateWarn.innerHTML = "review info and click submit";
         document.getElementById(id).appendChild(updateWarn);
-        updateForm(id);
+        const dataSubmit = document.getElementById("update-btn");        dataSubmit.onclick = () => {
+          console.log('dataSubmit clicked');
+          console.log(date.value, link.value, info.value);
+          updateData(id, date.value, info.value, link.value)
+        }
       } else {
         console.log("no data found");
       }
@@ -167,8 +170,8 @@ function updateForm(id) {
       id: labels[i],
       class: "form-control mb-3",
       type: "text",
-      placeholder: labels[i]
-    })
+      placeholder: labels[i],
+    });
     const label = document.createElement("label");
     label.setAttribute("for", labels[i]);
     label.innerHTML = labels[i];
@@ -176,21 +179,26 @@ function updateForm(id) {
     floatingForm.appendChild(inputs[i]);
     floatingForm.appendChild(label);
   }
-  if (id != "form-container" ) {
+  if (id != "form-container") {
     const submitBtn = document.createElement("button");
-    multiAttributes(submitBtn, { class: "btn btn-outline-danger", "data-id": id});
+    multiAttributes(submitBtn, {
+      id: "update-btn",
+      class: "btn btn-outline-danger submitter",
+      "data-id": id,
+    });
     submitBtn.innerHTML = "submit";
     formCardBody.appendChild(submitBtn);
-    submitBtn.onclick = function () {
-          reviewUpdate(id);
-        };
+    // submitBtn.onclick = function () {
+    //   reviewUpdate(id);
+    //   // remove button after click/add cancel button
+    // };
   } else {
     const insertBtn = document.createElement("button");
     multiAttributes(insertBtn, { class: "btn btn-outline-success" });
     insertBtn.innerHTML = "insert";
     insertBtn.onclick = function () {
-     insertData()
-    }
+      insertData();
+    };
     formCardBody.appendChild(insertBtn);
   }
 }
@@ -211,3 +219,14 @@ function cancelUpdate() {
   document.getElementById("form").reset();
 }
 // cancel.addEventListener("click", cancelUpdate);
+
+// update data
+function updateData(id, date, info, link) {
+  update(ref(db, `event/${id}`), {
+    date: date,
+    info: info,
+    link: link,
+  })
+    .then(() => console.log("data updated"))
+    .catch((err) => console.log(err));
+}
