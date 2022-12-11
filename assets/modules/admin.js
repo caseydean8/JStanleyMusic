@@ -15,16 +15,26 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const dbRef = ref(db);
 
-const date = document.getElementById("date");
-const link = document.getElementById("link");
-const info = document.getElementById("info");
+let date = document.getElementById("date");
+let link = document.getElementById("link");
+let info = document.getElementById("info");
 
 const insert = document.getElementById("insert");
-const select = document.getElementById("select");
+// const select = document.getElementById("select");
 const updateBtn = document.getElementById("update");
-
+const formContainer = document.getElementById("form-container");
+// Add event form
+function addEvent() {
+  console.log("addEvent fired");
+  const addEvent = document.createElement("h3")
+  addEvent.innerHTML = "Add Event"
+  formContainer.appendChild(addEvent);
+  updateForm("form-container");
+}
+addEvent();
 // insert data function
 function insertData() {
+  console.log("Insert data function fired");
   const eventId = Date.now();
   set(ref(db, `event/ ${eventId}`), {
     date: date.value,
@@ -39,7 +49,7 @@ function insertData() {
 }
 
 // insert button event
-insert.addEventListener("click", insertData);
+// insert.addEventListener("click", insertData);
 
 // multiple attributes helper function
 function multiAttributes(elem, attrs) {
@@ -96,30 +106,33 @@ function eventList(id, date, link, info) {
 // get data
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
-    snapshot.forEach((childSnapshot) => {
-      const eventId = childSnapshot.key;
-      const eventDate = childSnapshot.val().date;
-      const eventInfo = childSnapshot.val().info;
-      const eventLink = childSnapshot.val().link;
-      eventList(eventId, eventDate, eventInfo, eventLink);
-    });
+    snapshot
+      .forEach((childSnapshot) => {
+        const eventId = childSnapshot.key;
+        const eventDate = childSnapshot.val().date;
+        const eventInfo = childSnapshot.val().info;
+        const eventLink = childSnapshot.val().link;
+        eventList(eventId, eventDate, eventInfo, eventLink);
+      })
+      .catch((err) => console.error(err));
   });
 }
 window.onload = getAllEvents;
 
 // fetch and review data to update
 function reviewUpdate(id) {
+  console.log(`reviewUpdate fired`);
   get(child(dbRef, `event/${id}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
+        updateForm(id);
         date.value = snapshot.val().date;
         info.value = snapshot.val().info;
         link.value = snapshot.val().link;
         const updateWarn = document.createElement("p");
-        updateWarn.innerHTML = "update info at form on top of page.";
+        updateWarn.innerHTML = "update information below.";
         multiAttributes(updateWarn, { class: "ms-3 text-danger" });
         document.getElementById(id).appendChild(updateWarn);
-        updateForm(id);
       } else {
         console.log("no data found");
       }
@@ -129,38 +142,29 @@ function reviewUpdate(id) {
 
 // update form
 function updateForm(id) {
-  const dateInput = document.createElement("input");
-  multiAttributes(dateInput, {
-    id: "upDate",
+  date = document.createElement("input");
+  multiAttributes(date, {
+    id: "date",
     class: "form-control mb-3",
     type: "text",
     placeholder: "date",
   });
-  const dateLabel = document.createElement("label");
-  dateLabel.setAttribute("for", "floatingInput");
-  dateLabel.innerHTML = "date";
 
-  const infoInput = document.createElement("textarea");
-  multiAttributes(infoInput, {
-    id: "upInfo",
+  info = document.createElement("textarea");
+  multiAttributes(info, {
+    id: "info",
     class: "form-control mb-3",
     type: "text",
     placeholder: "info",
   });
-  const infoLabel = document.createElement("label");
-  dateLabel.setAttribute("for", "floatingInput");
-  infoLabel.innerHTML = "info";
 
-  const linkInput = document.createElement("input");
-  multiAttributes(linkInput, {
-    id: "uplink",
+  link = document.createElement("input");
+  multiAttributes(link, {
+    id: "link",
     class: "form-control mb-3",
     type: "link",
     placeholder: "link",
   });
-  const linkLabel = document.createElement("label");
-  linkLabel.setAttribute("for", "floatingInput");
-  linkLabel.innerHTML = "link";
 
   const updateDbBtn = document.createElement("button");
   multiAttributes(updateDbBtn, {
@@ -169,18 +173,23 @@ function updateForm(id) {
   });
   updateDbBtn.innerHTML = "update";
 
-  const inputs = [dateInput, infoInput, linkInput];
-  const labels = [dateLabel, infoLabel, linkLabel];
+  const inputs = [date, info, link];
+  const labels = ["date", "info", "link"];
 
   const updateForm = document.getElementById(id);
 
   for (let i = 0; i < inputs.length; i++) {
     const floatingForm = document.createElement("form");
-    floatingForm.setAttribute("class", "form-floating mx-3");
-    floatingForm.setAttribute("id", inputs[i]);
+    multiAttributes(floatingForm, {
+      id: inputs[i],
+      class: "form-floating",
+    });
+    const label = document.createElement("label");
+    label.setAttribute("for", inputs[i]);
+    label.innerHTML = labels[i];
     updateForm.appendChild(floatingForm);
-    floatingForm.appendChild(inputs[i])
-    floatingForm.appendChild(labels[i])
+    floatingForm.appendChild(inputs[i]);
+    floatingForm.appendChild(label);
   }
 }
 
