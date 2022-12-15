@@ -24,7 +24,6 @@ const formContainer = document.getElementById("form-container");
 
 // Add event form //////////////////////////
 function addEvent() {
-  console.log("addEvent fired line 28");
   const addEvent = document.createElement("h3");
   addEvent.innerHTML = "Add Event";
   formContainer.appendChild(addEvent);
@@ -34,7 +33,6 @@ addEvent();
 
 // insert data function
 function insertData() {
-  console.log("Insert data function fired");
   date = document.getElementById("date");
   info = document.getElementById("info");
   link = document.getElementById("link");
@@ -48,8 +46,8 @@ function insertData() {
       console.log("data stored successfully");
       document.getElementById("form").reset();
     })
-    .catch((err) => console.log(err));
 }
+
 function multiAttributes(elem, attrs) {
   for (const key in attrs) {
     elem.setAttribute(key, attrs[key]);
@@ -109,26 +107,21 @@ function eventList(id, date, info, link) {
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
-      console.log(childSnapshot.val());
       const eventId = childSnapshot.key;
       const eventDate = childSnapshot.val().date;
       const eventInfo = childSnapshot.val().info;
       const eventLink = childSnapshot.val().link;
       eventList(eventId, eventDate, eventInfo, eventLink);
-    });
-    // .catch((err) => console.error(err));
-  });
+    })
+  })
 }
 window.onload = getAllEvents;
 
 // fetch and review data to update
 function reviewUpdate(id) {
-  console.log(`reviewUpdate fired line 125`);
-  console.log(id);
   get(child(dbRef, `event/${id}`))
     .then((snapshot) => {
       if (snapshot.exists()) {
-        console.log(snapshot.val().date);
         date = document.getElementById("date");
         info = document.getElementById("info");
         link = document.getElementById("link");
@@ -140,15 +133,12 @@ function reviewUpdate(id) {
         updateWarn.innerHTML = "review info and click submit";
         document.getElementById(id).appendChild(updateWarn);
         const dataSubmit = document.getElementById("update-btn");        dataSubmit.onclick = () => {
-          console.log('dataSubmit clicked');
-          console.log(date.value, link.value, info.value);
           updateData(id, date.value, info.value, link.value)
         }
       } else {
         console.log("no data found");
       }
     })
-    .catch((err) => console.log(err));
 }
 
 // update form
@@ -189,10 +179,6 @@ function updateForm(id) {
     });
     submitBtn.innerHTML = "submit";
     formCardBody.appendChild(submitBtn);
-    // submitBtn.onclick = function () {
-    //   reviewUpdate(id);
-    //   // remove button after click/add cancel button
-    // };
   } else {
     const insertBtn = document.createElement("button");
     multiAttributes(insertBtn, { class: "btn btn-outline-primary" });
@@ -212,7 +198,6 @@ function deleteEvent(id) {
       document.getElementById("form").reset();
       window.location.reload();
     })
-    .catch((err) => console.log(err));
 }
 
 // cancel update
@@ -229,5 +214,4 @@ function updateData(id, date, info, link) {
     link: link,
   })
     .then(() => console.log("data updated"))
-    .catch((err) => console.log(err));
 }
