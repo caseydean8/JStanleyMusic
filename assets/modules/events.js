@@ -20,7 +20,7 @@ function multiAttributes(elem, attrs) {
 }
 
 //create  event list
-function eventList(id, date, link, info) {
+function eventList(id, date, info, link) {
   // event card
   const item = document.createElement("div");
   multiAttributes(item, { id: id, class: "card mb-2" });

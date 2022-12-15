@@ -109,6 +109,7 @@ function eventList(id, date, info, link) {
 function getAllEvents() {
   get(child(dbRef, "event")).then((snapshot) => {
     snapshot.forEach((childSnapshot) => {
+      console.log(childSnapshot.val());
       const eventId = childSnapshot.key;
       const eventDate = childSnapshot.val().date;
       const eventInfo = childSnapshot.val().info;
@@ -194,7 +195,7 @@ function updateForm(id) {
     // };
   } else {
     const insertBtn = document.createElement("button");
-    multiAttributes(insertBtn, { class: "btn btn-outline-success" });
+    multiAttributes(insertBtn, { class: "btn btn-outline-primary" });
     insertBtn.innerHTML = "insert";
     insertBtn.onclick = function () {
       insertData();
