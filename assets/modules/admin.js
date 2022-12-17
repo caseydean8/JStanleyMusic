@@ -70,16 +70,10 @@ function updateFormCreate(id) {
   }
   // add button creator function?
   if (id != "form-container") {
-    const submitBtn = document.createElement("button");
-    multiAttributes(submitBtn, {
-      id: "update-btn",
-      type: "button",
-      class: "btn btn-outline-danger",
-      "data-id": id,
-    });
-    submitBtn.innerHTML = "submit";
-    formCardBody.appendChild(submitBtn);
+    // SUBMIT UPDATE BUTTON
+    buttonCreator("update-btn", "submitBtn", id, "submit", "danger", formCardBody) 
   } else {
+    // CREATE BUTTON
     const insertBtn = document.createElement("button");
     multiAttributes(insertBtn, {
       class: "btn btn-primary",
@@ -240,3 +234,17 @@ function cancelUpdate() {
   document.getElementById("form").reset();
 }
 
+// BUTTON CREATOR
+function buttonCreator(id, name, dataId, title, color, appendee) {
+  console.log(`buttonCreator fired`)
+  name = document.createElement("button");
+  multiAttributes(name, {
+    id: id ? id : null,
+    class: `btn btn-${color}`,
+    type: "button",
+    "data-id": dataId? dataId: "none"
+  });
+  name.innerHTML = `${title}`;
+  appendee.appendChild(name);
+  return name;
+}
