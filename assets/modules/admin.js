@@ -33,19 +33,27 @@ addEvent();
 
 // insert data function
 function insertData() {
-  date = document.getElementById("date");
-  info = document.getElementById("info");
-  link = document.getElementById("link");
-  const eventId = Date.now();
-  set(ref(db, `event/ ${eventId}`), {
-    date: date.value,
-    link: link.value,
-    info: info.value,
-  })
-    .then(() => {
-      console.log("data stored successfully");
-      document.getElementById("form").reset();
+  date = document.getElementById("date").value;
+  info = document.getElementById("info").value;
+  link = document.getElementById("link").value;
+  if (date && info && link) {
+    console.log('data is true')
+    const eventId = Date.now();
+    console.log(date, info, link);
+    set(ref(db, `event/ ${eventId}`), {
+      date: date,
+      link: link,
+      info: info,
     })
+      .then(() => {
+        console.log("data stored successfully");
+        document.getElementById("form").reset();
+        window.location.reload();
+      })
+  } else {
+    console.log(date, info, link);
+    return false;
+  }
 }
 
 function multiAttributes(elem, attrs) {
@@ -72,22 +80,25 @@ function eventList(id, date, info, link) {
   // delete and update buttons
   const deleteBtn = document.createElement("button");
   multiAttributes(deleteBtn, {
+    type: "button",
     class: "btn btn-outline-danger d-inline-block mt-2 me-2",
     "data-id": id,
   });
   deleteBtn.innerHTML = "delete";
-  deleteBtn.onclick = function () {
+  deleteBtn.onclick = function() {
     deleteEvent(id);
   };
 
   // UPDATE BUTTON
   const updateBtn = document.createElement("button");
   multiAttributes(updateBtn, {
+    type: "button",
     class: "btn btn-outline-primary d-inline-block mt-2",
     "data-id": id,
   });
   updateBtn.innerHTML = "update";
-  updateBtn.onclick = function () {
+  updateBtn.onclick = function(e) {
+    e.preventDefault();
     formContainer.remove();
     updateForm(id);
     reviewUpdate(id);
@@ -132,7 +143,8 @@ function reviewUpdate(id) {
         multiAttributes(updateWarn, { class: "ms-3 text-danger" });
         updateWarn.innerHTML = "review info and click submit";
         document.getElementById(id).appendChild(updateWarn);
-        const dataSubmit = document.getElementById("update-btn");        dataSubmit.onclick = () => {
+        const dataSubmit = document.getElementById("update-btn");
+        dataSubmit.onclick = () => {
           updateData(id, date.value, info.value, link.value)
         }
       } else {
@@ -163,6 +175,7 @@ function updateForm(id) {
       type: "text",
       placeholder: labels[i],
     });
+    inputs[i].required = true;
     const label = document.createElement("label");
     label.setAttribute("for", labels[i]);
     label.innerHTML = labels[i];
@@ -174,16 +187,21 @@ function updateForm(id) {
     const submitBtn = document.createElement("button");
     multiAttributes(submitBtn, {
       id: "update-btn",
-      class: "btn btn-outline-danger submitter",
+      type: "button",
+      class: "btn btn-outline-danger",
       "data-id": id,
     });
     submitBtn.innerHTML = "submit";
     formCardBody.appendChild(submitBtn);
   } else {
     const insertBtn = document.createElement("button");
-    multiAttributes(insertBtn, { class: "btn btn-outline-primary" });
+    multiAttributes(insertBtn, {
+      class: "btn btn-primary",
+      type: "button",
+    });
     insertBtn.innerHTML = "insert";
-    insertBtn.onclick = function () {
+    insertBtn.onclick = function(e) {
+      e.preventDefault();
       insertData();
     };
     formCardBody.appendChild(insertBtn);
