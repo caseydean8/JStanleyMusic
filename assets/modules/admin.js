@@ -118,21 +118,6 @@ function eventListCreate(id, date, info, link) {
   multiAttributes(itemLink, { class: "d-block", href: link });
   itemLink.innerHTML = `facebook link`;
 
-  // DELETE BUTTON
-  //function buttonCreator(id, name, dataId, title, color, appendee)
-  const deleteBtn = document.createElement("button");
-  multiAttributes(deleteBtn, {
-    type: "button",
-    class: "btn btn-outline-danger d-inline-block mt-2 me-2",
-    "data-id": id,
-  });
-  deleteBtn.innerHTML = "delete";
-  deleteBtn.onclick = function() {
-    deleteEvent(id);
-  };
-
-  // UPDATE BUTTON
-  //function buttonCreator(id, name, dataId, title, color, appendee)
   const updateBtn = document.createElement("button");
   multiAttributes(updateBtn, {
     type: "button",
@@ -153,7 +138,7 @@ function eventListCreate(id, date, info, link) {
   cardBody.appendChild(itemDate);
   cardBody.appendChild(itemInfo);
   cardBody.appendChild(itemLink);
-  cardBody.appendChild(deleteBtn);
+  buttonCreator("delete-btn", "deleteBtn", id, "delete", "outline-danger d-inline-block mt-2 me-2", cardBody, "delete");
   cardBody.appendChild(updateBtn);
 }
 
@@ -247,7 +232,11 @@ function buttonCreator(id, name, dataId, title, color, appendee, func) {
   if (func) {
     name.onclick = function(e) {
       e.preventDefault();
-      func()
+      if (func === "delete") {
+        deleteEvent(dataId)
+      } else {
+        func()
+      }
     }
   }
   return name;
