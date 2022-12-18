@@ -103,7 +103,6 @@ window.onload = getAllEvents;
 //create  event list
 function eventListCreate(id, date, info, link) {
   console.log(`eventListCreate fired,step 4`)
-  console.log(`eventListCreate id ${id}`)
   // event card
   const item = document.createElement("div");
   multiAttributes(item, { id: id, class: "card mb-2" });
@@ -118,20 +117,6 @@ function eventListCreate(id, date, info, link) {
   multiAttributes(itemLink, { class: "d-block", href: link });
   itemLink.innerHTML = `facebook link`;
 
-  const updateBtn = document.createElement("button");
-  multiAttributes(updateBtn, {
-    type: "button",
-    class: "btn btn-outline-primary d-inline-block mt-2",
-    "data-id": id,
-  });
-  updateBtn.innerHTML = "update";
-  updateBtn.onclick = function(e) {
-    e.preventDefault();
-    formContainer.remove();
-    updateFormCreate(id);
-    reviewUpdate(id);
-  };
-
   const eventList = document.getElementById("event-list");
   eventList.append(item);
   item.appendChild(cardBody);
@@ -139,7 +124,7 @@ function eventListCreate(id, date, info, link) {
   cardBody.appendChild(itemInfo);
   cardBody.appendChild(itemLink);
   buttonCreator("delete-btn", "deleteBtn", id, "delete", "outline-danger d-inline-block mt-2 me-2", cardBody, "delete");
-  cardBody.appendChild(updateBtn);
+  buttonCreator("review-update-btn", "reviewUpdateBtn", id, "update", "outline-primary d-inline-block mt-2", cardBody, "review");
 }
 
 
@@ -219,7 +204,6 @@ function cancelUpdate() {
 
 // BUTTON CREATOR
 function buttonCreator(id, name, dataId, title, color, appendee, func) {
-  console.log(`buttonCreator fired`)
   name = document.createElement("button");
   multiAttributes(name, {
     id: id ? id : null,
@@ -234,10 +218,13 @@ function buttonCreator(id, name, dataId, title, color, appendee, func) {
       e.preventDefault();
       if (func === "delete") {
         deleteEvent(dataId)
+      } else if (func === "review") {
+        formContainer.remove();
+        updateFormCreate(dataId);
+        reviewUpdate(dataId);
       } else {
         func()
       }
     }
   }
-  return name;
 }
