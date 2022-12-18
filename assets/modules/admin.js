@@ -71,20 +71,15 @@ function updateFormCreate(id) {
   // add button creator function?
   if (id != "form-container") {
     // SUBMIT UPDATE BUTTON
-    buttonCreator("update-btn", "submitBtn", id, "submit", "danger", formCardBody) 
+    buttonCreator("update-btn", "submitBtn", id, "submit", "danger", formCardBody)
   } else {
     // CREATE BUTTON
-    const insertBtn = document.createElement("button");
-    multiAttributes(insertBtn, {
-      class: "btn btn-primary",
-      type: "button",
-    });
-    insertBtn.innerHTML = "insert";
-    insertBtn.onclick = function(e) {
-      e.preventDefault();
-      insertData();
-    };
-    formCardBody.appendChild(insertBtn);
+    buttonCreator("insert-btn", "insertBtn", "", "insert", "primary", formCardBody, insertData);
+    // const insertBtn = document.getElementById("insert-btn");
+    // insertBtn.onclick = function(e) {
+    //   e.preventDefault();
+    //   insertData();
+    // }
   }
 }
 
@@ -108,6 +103,7 @@ window.onload = getAllEvents;
 //create  event list
 function eventListCreate(id, date, info, link) {
   console.log(`eventListCreate fired,step 4`)
+  console.log(`eventListCreate id ${id}`)
   // event card
   const item = document.createElement("div");
   multiAttributes(item, { id: id, class: "card mb-2" });
@@ -123,6 +119,7 @@ function eventListCreate(id, date, info, link) {
   itemLink.innerHTML = `facebook link`;
 
   // DELETE BUTTON
+  //function buttonCreator(id, name, dataId, title, color, appendee)
   const deleteBtn = document.createElement("button");
   multiAttributes(deleteBtn, {
     type: "button",
@@ -135,6 +132,7 @@ function eventListCreate(id, date, info, link) {
   };
 
   // UPDATE BUTTON
+  //function buttonCreator(id, name, dataId, title, color, appendee)
   const updateBtn = document.createElement("button");
   multiAttributes(updateBtn, {
     type: "button",
@@ -235,16 +233,22 @@ function cancelUpdate() {
 }
 
 // BUTTON CREATOR
-function buttonCreator(id, name, dataId, title, color, appendee) {
+function buttonCreator(id, name, dataId, title, color, appendee, func) {
   console.log(`buttonCreator fired`)
   name = document.createElement("button");
   multiAttributes(name, {
     id: id ? id : null,
     class: `btn btn-${color}`,
     type: "button",
-    "data-id": dataId? dataId: "none"
+    "data-id": dataId ? dataId : "none"
   });
   name.innerHTML = `${title}`;
   appendee.appendChild(name);
+  if (func) {
+    name.onclick = function(e) {
+      e.preventDefault();
+      func()
+    }
+  }
   return name;
 }
